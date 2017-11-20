@@ -18,7 +18,7 @@ ShineOverlay.prototype = {
     this.frame.setAttribute('scrolling', 'no')
     this.frame.setAttribute('frameborder', 'no')
     this.stylesheet = document.createElement('link')
-    this.stylesheet.setAttribute('href', chrome.extension.getURL('pageOverlay.css'))
+    this.stylesheet.setAttribute('href', browser.extension.getURL('pageOverlay.css'))
     this.stylesheet.setAttribute('type', 'text/css')
     this.stylesheet.setAttribute('rel', 'stylesheet')
     this.overlay = document.createElement('shinebar')
@@ -45,7 +45,7 @@ ShineOverlay.prototype = {
   },
 
   _display: function(url) {
-    this.frame.setAttribute('src', chrome.extension.getURL(url))
+    this.frame.setAttribute('src', browser.extension.getURL(url))
   },
 
   display: function(fullname) {
@@ -78,7 +78,7 @@ function removeBar() {
 }
 
 window.addEventListener('message', function(e) {
-  if (e.origin == chrome.extension.getURL('').slice(0, -1)) {
+  if (e.origin == browser.extension.getURL('').slice(0, -1)) {
     if (!shineBar) { return }
     var request = JSON.parse(e.data)
     console.log('Message received from bar iframe: ', request)
@@ -93,7 +93,7 @@ window.addEventListener('message', function(e) {
   }
 }, false)
 
-port = chrome.extension.connect({name:'overlay'})
+port = browser.runtime.connect({name:'overlay'})
 port.onMessage.addListener(function(request) {
   switch (request.action) {
     case 'showInfo':

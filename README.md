@@ -1,9 +1,12 @@
-# reddit companion
+# Reddit Companion For Firefox
 
-reddit companion is a Chrome extension that integrates reddit into the browser. 
-This is a fork of the original extension to fix issues and add new functionality.
+This repository contains the Reddit Companion extension made to work with FF's
+WebExtensions API.
 
-The Chrome Web Store entry can be [found here](https://chrome.google.com/webstore/detail/hjndgefhmfcgpoocjcgoemphhdkbhipm).
+Requires FF57+.
+
+The original repository can be found [here](https://github.com/creesch/reddit-companion) (This is the more recently mainteined fork).
+
 
 ## features
 

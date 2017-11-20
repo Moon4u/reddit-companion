@@ -110,7 +110,8 @@ $(document).ready(function() {
 
 buttonsReady = false
 fullname = window.location.hash.substr(1)
-port = chrome.extension.connect({name:'bar:'+fullname})
+
+port = browser.runtime.connect({name:'bar:'+fullname})
 port.onMessage.addListener(function(msg) {
   switch (msg.action) {
     case 'update':

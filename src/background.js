@@ -224,7 +224,7 @@ tabStatus = {
 
     remove: function(tabId) {
         console.log('Tab removed', tabId)
-        var fullname = this.tabId[tabId].fullname
+        //var fullname = this.tabId[tabId].fullname
         delete this.tabId[tabId]
     },
 
@@ -382,7 +382,7 @@ mailNotifier = {
 
     clear: function() {
         if (this.notification != ''){
-            chrome.notifications.clear(this.notification,function(){})
+            browser.notifications.clear(this.notification,function(){})
             this.notification = ''
         }
     },
@@ -391,10 +391,10 @@ mailNotifier = {
     showNotification: function(title, text) {
         var n = this
         n.clear()
-        chrome.notifications.create(n.notification,{type:'basic',title:title, message:text, iconUrl:'/images/reddit-mail.svg'},function (noteId){
+        browser.notifications.create(n.notification,{type:'basic',title:title, message:text, iconUrl:'/images/reddit-mail.svg'},function (noteId){
             n.notification = noteId
-            if(!chrome.notifications.onClicked.hasListeners()){
-                chrome.notifications.onClicked.addListener(function (){
+            if(!browser.notifications.onClicked.hasListeners()){
+                browser.notifications.onClicked.addListener(function (){
                         window.open('https://www.reddit.com/message/unread/')
                         n.clear()
                     }
@@ -436,11 +436,11 @@ function setPageActionIcon(tab) {
     if (/^https?:\/\/.*/.test(tab.url)) {
         var info = redditInfo.getURL(tab.url)
         if (info) {
-            chrome.pageAction.setIcon({tabId:tab.id, path:'/images/reddit.png'})
+            browser.pageAction.setIcon({tabId:tab.id, path:'/images/reddit.png'})
         } else {
-            chrome.pageAction.setIcon({tabId:tab.id, path:'/images/reddit-inactive.png'})
+            browser.pageAction.setIcon({tabId:tab.id, path:'/images/reddit-inactive.png'})
         }
-        chrome.pageAction.show(tab.id)
+        browser.pageAction.show(tab.id)
         return info
     }
 }
@@ -453,7 +453,7 @@ function onActionClicked(tab) {
     var frame = 0
     var workingAnimation = window.setInterval(function() {
         try {
-            chrome.pageAction.setIcon({tabId:tab.id, path:'/images/working'+frame+'.png'})
+            browser.pageAction.setIcon({tabId:tab.id, path:'/images/working'+frame+'.png'})
         } catch (exc) {
             window.clearInterval(arguments.callee)
         }
@@ -473,10 +473,10 @@ function onActionClicked(tab) {
     })
 }
 
-chrome.tabs.onSelectionChanged.addListener(tabStatus.updateTab.bind(tabStatus))
-chrome.pageAction.onClicked.addListener(onActionClicked)
+browser.tabs.onActivated.addListener(tabStatus.updateTab.bind(tabStatus))
+browser.pageAction.onClicked.addListener(onActionClicked)
 
-chrome.extension.onRequest.addListener(function(request, sender, callback) {
+browser.runtime.onMessage.addListener(function(request, sender, callback) {
     switch (request.action) {
         case 'thingClick':
             console.log('Thing clicked', request)
@@ -492,7 +492,7 @@ chrome.extension.onRequest.addListener(function(request, sender, callback) {
     }
 })
 
-chrome.extension.onConnect.addListener(function(port) {
+browser.runtime.onConnect.addListener(function(port) {
     tag = port.name.split(':')
     name = tag[0]
     data = tag[1]
@@ -531,7 +531,7 @@ window.addEventListener('storage', function(e) {
 }, false)
 
 // Show page action for existing tabs.
-chrome.windows.getAll({populate:true}, function(wins) {
+browser.windows.getAll({populate:true}, function(wins) {
     wins.forEach(function(win) {
         win.tabs.forEach(function(tab) {
             setPageActionIcon(tab)
