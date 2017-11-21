@@ -3,8 +3,9 @@ function msgJSON(request) {
 }
 
 function fitHeight() {
-  msgJSON({action:'height', height:$('#bar').height()})
-  $('#bar').width('100%')
+  var bar = document.getElementById('bar')
+  msgJSON({action:'height', height:bar.clientHeight})
+  bar.style.width = '100%'
 }
 
 function getRandomInt(min, max) {
@@ -14,4 +15,12 @@ function getRandomInt(min, max) {
 
 function randomChoice(items) {
   return items[getRandomInt(0, items.length-1)]
+}
+
+function addClass(el, klass) {
+  el.classList.add(klass)
+}
+
+function removeClass(el, klass) {
+  el.classList.remove(klass)
 }

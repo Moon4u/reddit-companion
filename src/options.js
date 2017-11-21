@@ -1,4 +1,4 @@
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
   var messages = [
     'greetings, human.',
     'someone is wrong on the internet!',
@@ -6,18 +6,18 @@ $(document).ready(function() {
     '[meme regarding narwhals]',
     'help, trapped in an options page'
   ]
-  $('.notification-demo > .message').text(randomChoice(messages))
+  document.getElementsByClass('message')[0].text(randomChoice(messages))
 
-  $('input[type=checkbox]')
-    .each(function(i, el) {
+  var checkboxes = document.getElementsByTagName('input')
+  for (var el of checkboxes) {
       if (localStorage[el.id] == 'true') {
-        $(this).prop('checked', true)
-        $('#contents').addClass(el.id)
+          el.checked = true
+          addClass(document.getElementById('contents'), el.id)
       }
-    })
-    .click(function() {
-      var value= $(this).is(':checked')
-      localStorage[this.id] = value
-      $('#contents').toggleClass(this.id, value)
-    })
+
+      el.addEventListener('click', function() {
+          localStorage[ el.id ] = el.checked
+          document.getElementsById('contents').classList.toggle(this.id, value)
+      })
+  }
 })

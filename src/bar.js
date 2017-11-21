@@ -30,70 +30,78 @@ function toggleSaved() {
 function update() {
   initButtons()
 
-  $('#title').text(info.title)
+  document.getElementById('title').textContent = info.title
+  var bar = document.getElementById('bar')
 
   if (loggedIn) {
-    $('#bar').removeClass('logged-out').addClass('logged-in')
+    addClass(bar, 'logged-in')
+    removeClass(bar, 'logged-out')
   } else {
-    $('#bar').removeClass('logged-in').addClass('logged-out')
+    removeClass(bar, 'logged-in')
+    addClass(bar, 'logged-out')
   }
 
   fitHeight()
 
   if (info.permalink) {
-    $('#title').attr('href', 'https://www.reddit.com'+info.permalink)
+    var title   = document.getElementById('title');
+    title.setAttribute('href', 'https://www.reddit.com'+info.permalink)
   }
 
   if (info.likes == true) {
-    $('#bar').removeClass('disliked').addClass('liked')
+    removeClass(bar, 'disliked')
+    addClass(bar, 'liked')
   } else if (info.likes == false) {
-    $('#bar').removeClass('liked').addClass('disliked')
+    removeClass(bar, 'liked')
+    addClass(bar, 'disliked')
   } else {
-    $('#bar').removeClass('liked disliked')
+    removeClass(bar, 'liked')
+    removeClass(bar, 'disliked')
   }
 
   if (info.saved == true) {
-    $('#bar').addClass('saved')
+    addClass(bar, 'saved')
   } else {
-    $('#bar').removeClass('saved')
-  }
-  if (localStorage['showTooltips'] != 'false') {
-    $('#save').attr('title', info.saved ? 'Unsave' : 'Save')
+    removeClass(bar, 'saved')
   }
 
-  $('#score').text(info.score)
+  if (localStorage['showTooltips'] != 'false') {
+    document.getElementById('save').setAttribute('title', info.saved ? 'Unsave' : 'Save')
+  }
+
+  document.getElementById('score').textContent = info.score
   if (info.subreddit) {
     var subPath = '/r/'+info.subreddit
-    $('#subreddit')
-      .text(subPath)
-      .attr('href', 'https://www.reddit.com'+subPath)
+    var subreddit = document.getElementById('subreddit')
+    subreddit.textContent = subPath
+    subreddit.setAttribute('href', 'https://www.reddit.com'+subPath)
   } else {
-    $('#bar').removeClass('subreddit')
+    removeClass(bar, 'subreddit')
   }
-  $('#comments span').text(info.num_comments)
+  document.getElementById('comments').textContent = info.num_comments
 }
 
 function initButtons() {
   if (buttonsReady || info._fake) { return }
-  $('#comments').attr('href', 'https://www.reddit.com'+info.permalink)
+  document.getElementById('comments').setAttribute('href', 'https://www.reddit.com'+info.permalink)
 
-  $('#upvote').click(function() {
+  document.getElementById('upvote').addEventListener('click', function() {
     vote(info.likes == true ? null : true)
   })
 
-  $('#downvote').click(function() {
+  document.getElementById('downvote').addEventListener('click', function() {
     vote(info.likes == false ? null : false)
   })
 
-  $('#save').click(function() {
+  document.getElementById('save').addEventListener('click', function() {
     toggleSaved()
   })
 
-  $('#login').click(function () {
+  document.getElementById('login').addEventListener('click', function () {
     window.open('https://www.reddit.com/login/')
   })
 
-  $('#close').click(function() {
+  document.getElementById('close').addEventListener('click', function() {
     port.postMessage({action:'close'})
     msgJSON({action:'close'})
   })
@@ -101,11 +109,11 @@ function initButtons() {
   buttonsReady = true
 }
 
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
   if (localStorage['showTooltips'] == 'false') {
-    $('#bar *[title]').removeAttr('title')
+    document.getElementById('title').removeAttrribute('title')
   }
-  $(window).resize(fitHeight)
+  window.addEventListener('resize', fitHeight)
 })
 
 buttonsReady = false

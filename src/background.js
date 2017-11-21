@@ -1,3 +1,10 @@
+BGDEBUG = false;
+if (!BGDEBUG) {
+  console.log = function(){}
+}
+
+
+
 function initOptions() {
     defaultOptions = {
         'autoShow': true,
@@ -46,8 +53,25 @@ redditInfo = {
 
     request: function(options) {
         if (!options.data) { options.data = {} }
+
         options.data['app'] = 'shine'
-        $.ajax(options)
+
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4) {
+            var response = {}
+            response.data = JSON.parse(xhr.response)
+            options.success(response)
+          }
+        }
+
+        options.url += '?'
+        options.url += Object.keys(options.data).map(function(k) {
+            return encodeURIComponent(k) + '=' + encodeURIComponent(options.data[k])
+        }).join('&')
+
+        xhr.open("GET", options.url, true)
+        xhr.send()
     },
 
     update: function(callback) {
